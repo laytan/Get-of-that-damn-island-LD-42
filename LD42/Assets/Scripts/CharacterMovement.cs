@@ -19,6 +19,8 @@ public class CharacterMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //Simple Input
+        //If we are colliding disable movement (Pushables)
         if (!areColliding)
         {
             if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
@@ -38,6 +40,7 @@ public class CharacterMovement : MonoBehaviour {
                 Down();
             }
         }
+        //Moves to the postomove smoothly when canmove is set to true through input
         if(canMove)
         {
             transform.position = Vector3.MoveTowards(transform.position, posToMove, speed * Time.deltaTime);
@@ -47,7 +50,10 @@ public class CharacterMovement : MonoBehaviour {
             }
         }
     }
-
+    //Check if we are facing right, if not face right.
+    //If yes, set postomove a tile further and initiate movement with canmove
+    //We check if canmove is false so that we don't override postomove mid moving.
+    //We also check if the position where we want to go is a tile, so we don't fly/fall of the world
     void Right()
     {
         if(transform.rotation.eulerAngles.z != 270)

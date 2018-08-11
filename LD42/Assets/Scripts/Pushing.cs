@@ -14,7 +14,8 @@ public class Pushing : MonoBehaviour {
 	void Update () {
 		
 	}
-
+    //If we collide with a pushable object we get the position we want to push it to,
+    //and then run moveTo on the objects script
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Pushable")
@@ -25,6 +26,7 @@ public class Pushing : MonoBehaviour {
             target.GetComponent<Pushable>().MoveTo(pushablePos);
         }
     }
+    //If we are colliding let our movement script know so we arent able to move through the pushable object
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Pushable")
@@ -32,6 +34,7 @@ public class Pushing : MonoBehaviour {
             GetComponent<CharacterMovement>().areColliding = true;
         }
     }
+    //Make the player able to move again
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Pushable")

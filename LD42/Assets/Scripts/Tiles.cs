@@ -80,6 +80,8 @@ public class Tiles : MonoBehaviour {
             //TODO: We won?
         }
     }
+    //Checks for a tile at given position
+    //TODO: Only works on player for some reason, Would like to have it on the pushables instead of collisions
     public bool IsThereATileAt(Vector3 pos)
     {
         if(posToTile.ContainsKey(pos))
@@ -90,9 +92,5 @@ public class Tiles : MonoBehaviour {
         {
             return false;
         }
-    }
-    public GameObject GetTileAt(Vector3 pos)
-    {
-        return posToTile[pos];
     }
 }
