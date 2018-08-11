@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour {
 
-    public Texture2D map;
+    public Texture2D[] maps;
     public ColorToPrefab[] colorMappings;
     public GameObject Tiles;
     Tiles tiles;
+
+    public int currentLvl;
 	// Use this for initialization
 	void Start () {
+        currentLvl = GameObject.FindGameObjectWithTag("Lvl").GetComponent<CurrentLevel>().lvl;
+
         tiles = Tiles.GetComponent<Tiles>();
         GenerateLevel();
         tiles.LevelIsGenerated();
@@ -17,9 +21,9 @@ public class LevelGenerator : MonoBehaviour {
 
     void GenerateLevel()
     {
-        for(int x = 0; x < map.width; x++)
+        for(int x = 0; x < maps[currentLvl].width; x++)
         {
-            for(int y = 0; y < map.height; y++)
+            for(int y = 0; y < maps[currentLvl].height; y++)
             {
                 GenerateTile(x, y);
             }
@@ -28,7 +32,7 @@ public class LevelGenerator : MonoBehaviour {
 
     void GenerateTile(int x, int y)
     {
-        Color pixelColor = map.GetPixel(x, y);
+        Color pixelColor = maps[currentLvl].GetPixel(x, y);
         if(pixelColor.a == 0)
         {
             //transparent

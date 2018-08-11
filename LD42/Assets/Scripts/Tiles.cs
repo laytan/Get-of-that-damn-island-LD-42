@@ -72,13 +72,21 @@ public class Tiles : MonoBehaviour {
             yield return new WaitForSeconds(tileDestroyDelay);
             GameObject target = tileOrderedOnDistance[0];
             Vector3 posToRemove = target.transform.position;
-            Destroy(target);
-            tileOrderedOnDistance.Remove(target);
-
             //Checks if this tile was populated, if so, remove the populator
-            if(WhatIsAt(posToRemove) != null)
+            if (WhatIsAt(posToRemove).Length > 1)
             {
-                Destroy(WhatIsAt(posToRemove)[0].collider.gameObject);
+                foreach(RaycastHit2D thing in WhatIsAt(posToRemove))
+                {
+                    if(thing.collider.tag != "Tile")
+                    {
+                        Destroy(thing.collider.gameObject);
+                    }
+                }
+            } 
+            else
+            {
+                Destroy(target);
+                tileOrderedOnDistance.Remove(target);
             }
             //Loop back
             StartCoroutine("DestroyRandomTile");

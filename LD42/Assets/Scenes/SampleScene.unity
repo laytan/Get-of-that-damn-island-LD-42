@@ -155,7 +155,7 @@ Prefab:
     - target: {fileID: 114607832221499402, guid: 631f259cf13ae314989033df87104561,
         type: 2}
       propertyPath: tileDestroyDelay
-      value: 0.3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1976780463616246, guid: 631f259cf13ae314989033df87104561, type: 2}
       propertyPath: m_TagString
@@ -193,8 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f25fb61e76f1eb4ea6760118ee87c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileDestroyDelay: 0.3
-  startPos: {x: 0, y: 0, z: 0}
+  tileDestroyDelay: 1.5
 --- !u!4 &184141234
 Transform:
   m_ObjectHideFlags: 0
@@ -245,7 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb682f00f168a7c4faf254c859b4aa26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 4
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -326,7 +325,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c933bf948f38cc478ae7f60f4f8efaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  map: {fileID: 2800000, guid: f08eff806bbae494cb4512e0f8073942, type: 3}
+  maps:
+  - {fileID: 2800000, guid: f08eff806bbae494cb4512e0f8073942, type: 3}
+  - {fileID: 2800000, guid: 4f7438471a45a4749afb249b0691db88, type: 3}
   colorMappings:
   - color: {r: 0, g: 0, b: 0, a: 1}
     prefab: {fileID: 1461662855106772, guid: 8424e940ceac9e84195a93e34de2beca, type: 2}
@@ -355,6 +356,7 @@ MonoBehaviour:
     foundation: {fileID: 1461662855106772, guid: 8424e940ceac9e84195a93e34de2beca,
       type: 2}
   Tiles: {fileID: 184141232}
+  currentLvl: 0
 --- !u!4 &1916849517
 Transform:
   m_ObjectHideFlags: 0
