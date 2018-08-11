@@ -5,13 +5,16 @@ using UnityEngine;
 public class Tiles : MonoBehaviour {
 
     private List<GameObject> tileOrderedOnDistance = new List<GameObject>();
+    private Dictionary<Vector3, GameObject> posToTile = new Dictionary<Vector3, GameObject>();
     public float tileDestroyDelay;
 
     // Use this for initialization
     void Start () {
         //Start of game initialize the ordered array on distance
         CreateTileIndex();
-        StartCoroutine("DestroyRandomTile");
+        //TODO: Uncomment to destroy island
+        //StartCoroutine("DestroyRandomTile");
+        Debug.Log(posToTile.Count);
 	}
 	
 	// Update is called once per frame
@@ -47,8 +50,10 @@ public class Tiles : MonoBehaviour {
         {
             float maxDistance = Mathf.Max(distances.ToArray());
             int index = distances.IndexOf(maxDistance);
+            GameObject tile = tiles[index];
 
-            tileOrderedOnDistance.Add(tiles[index]);
+            tileOrderedOnDistance.Add(tile);
+            posToTile.Add(tile.transform.position, tile);
 
             tiles.RemoveAt(index);
             distances.RemoveAt(index);
@@ -63,6 +68,7 @@ public class Tiles : MonoBehaviour {
             yield return new WaitForSeconds(tileDestroyDelay);
 
             GameObject target = tileOrderedOnDistance[0];
+            posToTile.Remove(target.transform.position);
             Destroy(target);
             tileOrderedOnDistance.Remove(target);
 
@@ -73,5 +79,20 @@ public class Tiles : MonoBehaviour {
             Debug.Log("No more tiles left");
             //TODO: We won?
         }
+    }
+    public bool IsThereATileAt(Vector3 pos)
+    {
+        if(posToTile.ContainsKey(pos))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public GameObject GetTileAt(Vector3 pos)
+    {
+        return posToTile[pos];
     }
 }
