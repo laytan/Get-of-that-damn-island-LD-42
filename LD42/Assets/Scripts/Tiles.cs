@@ -5,25 +5,30 @@ using UnityEngine;
 public class Tiles : MonoBehaviour {
 
     private List<GameObject> tileOrderedOnDistance = new List<GameObject>();
-    private Dictionary<Vector3, GameObject> posToTile = new Dictionary<Vector3, GameObject>();
+
+    [Tooltip("The amount of seconds to wait before destroying a tile.")]
     public float tileDestroyDelay;
 
+    private Vector3 startPos;
+    private bool levelGenDone = false;
     // Use this for initialization
-    void Start () {
-        //Start of game initialize the ordered array on distance
-        CreateTileIndex();
-        //TODO: Uncomment to destroy island
-        //StartCoroutine("DestroyRandomTile");
-        Debug.Log(posToTile.Count);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void LevelIsGenerated () {
+        levelGenDone = true;  
+    }
+    public void SetStartPos(Vector3 pos)
+    {
+        if (levelGenDone)
+        {
+            startPos = pos;
+            //Start of game initialize the ordered array on distance
+            CreateTileIndex();
+            //TODO: Uncomment to destroy island
+            StartCoroutine("DestroyRandomTile");
+        }
+    }
 
     //Populates tileOrderedOnDistance list
-    //TODO: There is probably a better way of doing this!
+    //TODO: There is probably a better way of doing this! Only gets run once so is probably not a problem
     void CreateTileIndex()
     {
         //Get all the tiles, these are in a random order
@@ -36,7 +41,7 @@ public class Tiles : MonoBehaviour {
         //Loop through all the tiles and add the tile and distances to their lists
         foreach (GameObject tile in randomOrder)
         {
-            float distance = Vector3.Distance(tile.transform.position, Vector3.zero);
+            float distance = Vector3.Distance(tile.transform.position, startPos);
             tiles.Add(tile);
             distances.Add(distance);
         }
@@ -53,7 +58,6 @@ public class Tiles : MonoBehaviour {
             GameObject tile = tiles[index];
 
             tileOrderedOnDistance.Add(tile);
-            posToTile.Add(tile.transform.position, tile);
 
             tiles.RemoveAt(index);
             distances.RemoveAt(index);
@@ -66,31 +70,34 @@ public class Tiles : MonoBehaviour {
         if (tileOrderedOnDistance.Count > 1)
         {
             yield return new WaitForSeconds(tileDestroyDelay);
-
             GameObject target = tileOrderedOnDistance[0];
-            posToTile.Remove(target.transform.position);
+            Vector3 posToRemove = target.transform.position;
             Destroy(target);
             tileOrderedOnDistance.Remove(target);
 
+            //Checks if this tile was populated, if so, remove the populator
+            if(WhatIsAt(posToRemove) != null)
+            {
+                Destroy(WhatIsAt(posToRemove)[0].collider.gameObject);
+            }
+            //Loop back
             StartCoroutine("DestroyRandomTile");
         }
-        else
-        {
-            Debug.Log("No more tiles left");
-            //TODO: We won?
-        }
     }
-    //Checks for a tile at given position
-    //TODO: Only works on player for some reason, Would like to have it on the pushables instead of collisions
-    public bool IsThereATileAt(Vector3 pos)
+
+    //Checks for all the colliders in a given position and returns a raycasthit2d array with them
+    //If there is nothing returns null
+    public RaycastHit2D[] WhatIsAt(Vector3 pos)
     {
-        if(posToTile.ContainsKey(pos))
+        RaycastHit2D[] hit = Physics2D.BoxCastAll(pos, new Vector2(0.5f, 0.5f), 0f, transform.forward, 10f);
+        if (hit.Length > 0)
         {
-            return true;
+            return hit;
         }
         else
         {
-            return false;
+            return null;
         }
+
     }
 }

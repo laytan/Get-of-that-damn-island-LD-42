@@ -6,16 +6,16 @@ public class Pushable : MonoBehaviour {
 
     bool canMove = false;
     Vector3 targetPos;
+
+    [Tooltip("The speed that the object gets pushed at")]
     public float speed;
 
-    public GameObject islandTiles;
+    //Get acces to the tiles class
     Tiles tiles;
-
-    bool onGround = true;
 
     // Use this for initialization
     void Start () {
-        tiles = islandTiles.GetComponent<Tiles>();
+        tiles = GameObject.FindGameObjectWithTag("Tiles").GetComponent<Tiles>();
     }
 	
 	// Update is called once per frame
@@ -48,44 +48,4 @@ public class Pushable : MonoBehaviour {
     {
         Destroy(gameObject);
     }
-
-    //////////////////////////////////////////////////////
-    //Temporary solution!!!!!!!!!!!!!!!!!!!!!
-    //TODO: VERY INNEFICIENT, But tile checking buggs out
-    //Check for exiting a collider called tile and sets onground to false if we do
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if(collision.gameObject.tag == "Tile")
-        {
-            onGround = false;
-            StartCoroutine("CheckDelayed");
-        }
-    }
-    //If we are colliding again set onground to true
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Tile")
-        {
-            onGround = true;
-            StartCoroutine("CheckDelayed");
-        }
-    }
-    //Checks if we are on the ground and calls die if we are not
-    void Check()
-    {
-        if(onGround == false)
-        {
-            Die();
-        }
-    }
-    //Delays the check so if we are moving to a new tile it has time to enter that collider and set onground to true again,
-    //if we did not do this the object would be destroyed before we colide again
-    IEnumerator CheckDelayed()
-    {
-        yield return new WaitForSeconds(0.6f);
-        Check();
-    }
-    //End of code that has to be remade
-    ///////////////////////////////////
-    
 }

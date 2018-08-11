@@ -4,42 +4,40 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour {
 
-    public GameObject islandTiles;
+    //Get acces to the tiles class
     private Tiles tiles;
-
-    Vector3 posToMove;
-    bool canMove = false;
+    //Movement
+    private Vector3 posToMove;
+    private bool canMove = false;
+    [Tooltip("Speed at which you move to a new position")]
     public float speed;
-    public bool areColliding = false;
 
 	// Use this for initialization
 	void Start () {
-        tiles = islandTiles.GetComponent<Tiles>();
+        tiles = GameObject.FindGameObjectWithTag("Tiles").GetComponent<Tiles>();
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowCharacter>().FollowMe(this.gameObject);
 	}
 	
 	// Update is called once per frame
 	void Update () {
         //Simple Input
-        //If we are colliding disable movement (Pushables)
-        if (!areColliding)
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                Left();
-            }
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                Right();
-            }
-            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                Up();
-            }
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                Down();
-            }
+            Left();
         }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Right();
+        }
+        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            Up();
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            Down();
+        }
+
         //Moves to the postomove smoothly when canmove is set to true through input
         if(canMove)
         {
@@ -50,10 +48,9 @@ public class CharacterMovement : MonoBehaviour {
             }
         }
     }
+
     //Check if we are facing right, if not face right.
-    //If yes, set postomove a tile further and initiate movement with canmove
-    //We check if canmove is false so that we don't override postomove mid moving.
-    //We also check if the position where we want to go is a tile, so we don't fly/fall of the world
+    //If yes, calculate target position and do the checks on that
     void Right()
     {
         if(transform.rotation.eulerAngles.z != 270)
@@ -63,11 +60,7 @@ public class CharacterMovement : MonoBehaviour {
         else
         {
             Vector3 targetPos = new Vector3(transform.position.x + 1, transform.position.y);
-            if (!canMove && tiles.IsThereATileAt(targetPos))
-            {
-                posToMove = targetPos;
-                canMove = true;
-            }
+            DoChecks(targetPos);
         }
     }
     void Left()
@@ -79,11 +72,7 @@ public class CharacterMovement : MonoBehaviour {
         else
         {
             Vector3 targetPos = new Vector3(transform.position.x - 1, transform.position.y);
-            if (!canMove && tiles.IsThereATileAt(targetPos))
-            {
-                posToMove = targetPos;
-                canMove = true;
-            }
+            DoChecks(targetPos);
         }
     }
     void Up()
@@ -95,11 +84,7 @@ public class CharacterMovement : MonoBehaviour {
         else
         {
             Vector3 targetPos = new Vector3(transform.position.x, transform.position.y + 1);
-            if (!canMove && tiles.IsThereATileAt(targetPos))
-            {
-                posToMove = targetPos;
-                canMove = true;
-            }
+            DoChecks(targetPos);
 
         }
     }
@@ -112,11 +97,103 @@ public class CharacterMovement : MonoBehaviour {
         else
         {
            Vector3 targetPos = new Vector3(transform.position.x, transform.position.y - 1);
-           if (!canMove && tiles.IsThereATileAt(targetPos))
-           {
-               posToMove = targetPos;
-               canMove = true;
-           }
+           DoChecks(targetPos);
+        }
+    }
+
+    //Get the position in the direction of the player behind the target, check if there is a tile there
+    //If so, push and return true to notify succesfull, else return false and don't push
+    public bool Push(GameObject target)
+    {
+        Vector3 pushablePos = target.transform.position + transform.up;
+        
+        //If there is anything
+        if (tiles.WhatIsAt(pushablePos) != null)
+        {
+            //Loop through all the colliders looking for tiles, and immovables
+            GameObject tile = null;
+            GameObject immovable = null;
+            RaycastHit2D[] thingsAtPos = tiles.WhatIsAt(pushablePos);
+            foreach (RaycastHit2D thing in thingsAtPos)
+            {
+                if (thing.collider.tag == "Tile")
+                {
+                    tile = thing.collider.gameObject;
+                }
+                else if (thing.collider.tag == "Immovable")
+                {
+                    immovable = thing.collider.gameObject;
+                }
+            }
+
+            //If there is a tile and not an immovable object
+            if (tile != null && immovable == null)
+            {
+                target.GetComponent<Pushable>().MoveTo(pushablePos);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    void DoChecks(Vector3 targetPos)
+    {
+        //If canMove is false, we can set a new position and move
+        //This is true when we are already moving
+        if (!canMove)
+        {
+            //If we have colliders at the target position
+            if (tiles.WhatIsAt(targetPos) != null)
+            {
+                //Get all the colliders at this position and check if there are more then one
+                RaycastHit2D[] thingsAtPos = tiles.WhatIsAt(targetPos);
+                if (thingsAtPos.Length > 1)
+                {
+                    //Loop through the colliders to find if we have a gameobject with the tag pushable
+                    GameObject target = null;
+                    GameObject immovable = null;
+                    foreach (RaycastHit2D thing in thingsAtPos)
+                    {
+                        if (thing.collider.tag == "Pushable") 
+                        {
+                            target = thing.collider.gameObject;
+                        }
+                        else if (thing.collider.tag == "Immovable")
+                        {
+                            immovable = thing.collider.gameObject;
+                        }
+                    }
+                    if(immovable != null)
+                    {
+                        //There is an immovable object in that position
+                    }
+                    //If there is no immovable object
+                    else
+                    {
+                        //If there is a pushable object
+                        if (target != null)
+                        {
+                            //If it's true, the object is pushed, so we can move to that position.
+                            //If it's false, the object couldn't be pushed so we don't move there.
+                            if (Push(target) == true)
+                            {
+                                posToMove = targetPos;
+                                canMove = true;
+                            }
+                        }
+                    }
+                }
+                //We can move regardless if there is only one collider because that will be a tile
+                else
+                {
+                    posToMove = targetPos;
+                    canMove = true;
+                }
+            }
         }
     }
 }
