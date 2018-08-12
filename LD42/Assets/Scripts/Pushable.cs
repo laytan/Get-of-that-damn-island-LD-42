@@ -10,12 +10,9 @@ public class Pushable : MonoBehaviour {
     [Tooltip("The speed that the object gets pushed at")]
     public float speed;
 
-    //Get acces to the tiles class
-    Tiles tiles;
-
     // Use this for initialization
     void Start () {
-        tiles = GameObject.FindGameObjectWithTag("Tiles").GetComponent<Tiles>();
+        
     }
 	
 	// Update is called once per frame

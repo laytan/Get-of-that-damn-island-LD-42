@@ -12,6 +12,8 @@ public class CharacterMovement : MonoBehaviour {
     [Tooltip("Speed at which you move to a new position")]
     public float speed;
 
+
+    private bool areColliding = false;
 	// Use this for initialization
 	void Start () {
         tiles = GameObject.FindGameObjectWithTag("Tiles").GetComponent<Tiles>();
@@ -20,24 +22,27 @@ public class CharacterMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //Simple Input
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        //We don't want input when we are colliding with a object that we are pushing
+        if (!areColliding)
         {
-            Left();
+            //Simple Input
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                Left();
+            }
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                Right();
+            }
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                Up();
+            }
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                Down();
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            Right();
-        }
-        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            Up();
-        }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            Down();
-        }
-
         //Moves to the postomove smoothly when canmove is set to true through input
         if(canMove)
         {
@@ -194,6 +199,23 @@ public class CharacterMovement : MonoBehaviour {
                     canMove = true;
                 }
             }
+        }
+    }
+
+    //Check if we are in the middle of pushing an object
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.collider.tag == "Pushable")
+        {
+            areColliding = true;
+        }
+    }
+    //Check if we just stopped pushing an object
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.collider.tag == "Pushable")
+        {
+            areColliding = false;
         }
     }
 }

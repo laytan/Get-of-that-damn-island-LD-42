@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Goal : MonoBehaviour {
 
@@ -16,7 +17,14 @@ public class Goal : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.name);
+        if(collision.gameObject.name == "target(Clone)")
+        {
+            WonGame();
+        }
+    }
+    void WonGame()
+    {
+        SceneManager.LoadScene(3);
     }
    
 
