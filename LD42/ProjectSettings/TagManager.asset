@@ -9,6 +9,8 @@ TagManager:
   - Immovable
   - Tiles
   - Lvl
+  - Goal
+  - UI
   layers:
   - Default
   - TransparentFX

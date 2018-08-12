@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class Goal : MonoBehaviour {
+public class goal : MonoBehaviour {
+
 
 	// Use this for initialization
 	void Start () {
@@ -14,18 +14,4 @@ public class Goal : MonoBehaviour {
 	void Update () {
 		
 	}
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.name == "target(Clone)")
-        {
-            WonGame();
-        }
-    }
-    void WonGame()
-    {
-        SceneManager.LoadScene(3);
-    }
-   
-
 }

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212453810186600404}
   - component: {fileID: 114805534089419896}
   - component: {fileID: 61174352359136114}
+  - component: {fileID: 111528760216258206}
   m_Layer: 8
   m_Name: Falling-Tile
   m_TagString: Untagged
@@ -67,6 +68,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!111 &111528760216258206
+Animation:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1948554151288988}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 94585375e3d969b48936e09f9a29fb60, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 94585375e3d969b48936e09f9a29fb60, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!114 &114805534089419896
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -79,6 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxTime: 2
+  anim: {fileID: 111528760216258206}
 --- !u!212 &212453810186600404
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -9,10 +9,25 @@ public class LevelGenerator : MonoBehaviour {
     public GameObject Tiles;
     Tiles tiles;
 
+    public GameObject T1, T2, T3;
+
     public int currentLvl;
 	// Use this for initialization
 	void Start () {
         currentLvl = GameObject.FindGameObjectWithTag("Lvl").GetComponent<CurrentLevel>().lvl;
+
+        if(currentLvl == 0)
+        {
+            T1.SetActive(true);
+        }
+        else if(currentLvl == 1)
+        {
+            T2.SetActive(true);
+        }
+        else if(currentLvl == 2)
+        {
+            T3.SetActive(true);
+        }
 
         tiles = Tiles.GetComponent<Tiles>();
         GenerateLevel();

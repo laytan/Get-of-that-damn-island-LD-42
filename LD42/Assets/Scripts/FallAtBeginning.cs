@@ -6,7 +6,7 @@ public class FallAtBeginning : MonoBehaviour {
 
     [Tooltip("Maximum time that this object will fall after")]
     public float maxTime;
-
+    public Animation anim;
 	// Use this for initialization
 	void Start () {
         //Calls die after a random amount of time
@@ -20,6 +20,7 @@ public class FallAtBeginning : MonoBehaviour {
 	}
     void Die()
     {
-        Destroy(gameObject);
+        anim.Play();
+        Destroy(gameObject,1);
     }
 }

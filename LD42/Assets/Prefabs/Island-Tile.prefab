@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4645406598978258}
   - component: {fileID: 212538478540499518}
   - component: {fileID: 61154673380432032}
+  - component: {fileID: 111381425497567804}
   m_Layer: 8
   m_Name: Island-Tile
   m_TagString: Tile
@@ -66,6 +67,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!111 &111381425497567804
+Animation:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1461662855106772}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 94585375e3d969b48936e09f9a29fb60, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 94585375e3d969b48936e09f9a29fb60, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!212 &212538478540499518
 SpriteRenderer:
   m_ObjectHideFlags: 1

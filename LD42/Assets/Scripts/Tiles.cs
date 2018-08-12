@@ -13,9 +13,12 @@ public class Tiles : MonoBehaviour {
     private Vector3 startPos;
     private bool levelGenDone = false;
 
+    public UI ui;
+
     // Use this for initialization
     public void LevelIsGenerated () {
-        levelGenDone = true;  
+        levelGenDone = true;
+        ui = GameObject.Find("Canvas").GetComponent<UI>();
     }
     public void SetStartPos(Vector3 pos)
     {
@@ -24,13 +27,11 @@ public class Tiles : MonoBehaviour {
             startPos = pos;
             //Start of game initialize the ordered array on distance
             CreateTileIndex();
-            //TODO: Uncomment to destroy island
             StartCoroutine("DestroyFurthestPossibleObject");
         }
     }
 
     //Populates tileOrderedOnDistance list
-    //TODO: There is probably a better way of doing this! Only gets run once so is probably not a problem
     void CreateTileIndex()
     {
         //Get all the tiles, these are in a random order
@@ -89,7 +90,8 @@ public class Tiles : MonoBehaviour {
         //If there is only a tile
         if (CheckForTileOnly(obj.transform.position))
         {
-            Destroy(obj);
+            obj.GetComponent<Animation>().Play();
+            Destroy(obj, 1);
             tileOrderedOnDistance.Remove(obj);
         }
         //If there is more than a tile
@@ -108,7 +110,8 @@ public class Tiles : MonoBehaviour {
             }
             else
             {
-                Debug.LogError("This code should not be reached!");
+                TryDestroy(tileOrderedOnDistance[1]);
+                Debug.Log("This code should not be reached!");
             }
         }
     }
@@ -178,5 +181,6 @@ public class Tiles : MonoBehaviour {
     void LostGame()
     {
         //Load lose scene
+        ui.ToLoseScreen();
     }
 }
